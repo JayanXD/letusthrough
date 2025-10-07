@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaf it Up! - Loading Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; overflow: hidden; }
+
+    #loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 50%, #B0E0E6 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease, visibility 0.8s ease, background 2s ease;
+      overflow: hidden;
+    }
+
+    /* Weather transitions */
+    #loader.rainy {
+      background: linear-gradient(135deg, #4a5568 0%, #718096 50%, #a0aec0 100%);
+    }
+
+    #loader.sunset {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 50%, #ffd700 100%);
+    }
+
+    #loader.night {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+    }
+
+    /* Level Badge */
+    .level-badge {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #1a1a1a;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      animation: levelPulse 2s infinite;
+      z-index: 100;
+      font-family: 'Press Start 2P', cursive;
+      border: 3px solid #ff8800;
+    }
+
+    @keyframes levelPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    /* Achievement Popup */
+    .achievement {
+      position: absolute;
+      top: 100px;
+      right: -400px;
+      background: linear-gradient(135deg, #6ebf4b, #4e8d35);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 15px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 100;
+      border: 3px solid #fff;
+      animation: achievementSlide 4s ease-in-out;
+    }
+
+    @keyframes achievementSlide {
+      0% { right: -400px; }
+      20% { right: 30px; }
+      80% { right: 30px; }
+      100% { right: -400px; }
+    }
+
+    /* Animated Clouds */
+    .clouds {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 100px;
+      opacity: 0.7;
+      animation: float 35s infinite linear;
+      transition: background 2s ease;
+    }
+
+    .cloud.dark {
+      background: rgba(100, 100, 120, 0.8);
+    }
+
+    .cloud:before,
+    .cloud:after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 100px;
+      transition: background 2s ease;
+    }
+
+    .cloud.dark:before,
+    .cloud.dark:after {
+      background: rgba(100, 100, 120, 0.8);
+    }
+
+    .cloud1 { width: 100px; height: 40px; top: 20%; left: -100px; animation-delay: 0s; animation-duration: 35s; }
+    .cloud1:before { width: 50px; height: 50px; top: -25px; left: 10px; }
+    .cloud1:after { width: 60px; height: 20px; top: -10px; right: 10px; }
+
+    .cloud2 { width: 80px; height: 30px; top: 40%; left: -80px; animation-delay: 5s; animation-duration: 40s; }
+    .cloud2:before { width: 60px; height: 40px; top: -20px; left: 15px; }
+    .cloud2:after { width: 40px; height: 15px; top: -8px; right: 15px; }
+
+    .cloud3 { width: 120px; height: 50px; top: 15%; left: -120px; animation-delay: 10s; animation-duration: 45s; }
+    .cloud3:before { width: 70px; height: 60px; top: -30px; left: 20px; }
+    .cloud3:after { width: 50px; height: 25px; top: -12px; right: 20px; }
+
+    .cloud4 { width: 90px; height: 35px; top: 60%; left: -90px; animation-delay: 3s; animation-duration: 38s; }
+    .cloud4:before { width: 55px; height: 45px; top: -22px; left: 12px; }
+    .cloud4:after { width: 45px; height: 18px; top: -9px; right: 12px; }
+
+    .cloud5 { width: 110px; height: 45px; top: 75%; left: -110px; animation-delay: 8s; animation-duration: 42s; }
+    .cloud5:before { width: 65px; height: 55px; top: -27px; left: 18px; }
+    .cloud5:after { width: 55px; height: 22px; top: -11px; right: 18px; }
+
+    .cloud6 { width: 95px; height: 38px; top: 30%; left: -95px; animation-delay: 12s; animation-duration: 36s; }
+    .cloud6:before { width: 58px; height: 48px; top: -24px; left: 14px; }
+    .cloud6:after { width: 48px; height: 19px; top: -9px; right: 14px; }
+
+    .cloud7 { width: 105px; height: 42px; top: 50%; left: -105px; animation-delay: 15s; animation-duration: 44s; }
+    .cloud7:before { width: 62px; height: 52px; top: -26px; left: 16px; }
+    .cloud7:after { width: 52px; height: 21px; top: -10px; right: 16px; }
+
+    .cloud8 { width: 85px; height: 33px; top: 25%; left: -85px; animation-delay: 18s; animation-duration: 39s; }
+    .cloud8:before { width: 52px; height: 43px; top: -21px; left: 13px; }
+    .cloud8:after { width: 43px; height: 17px; top: -8px; right: 13px; }
+
+    .cloud9 { width: 115px; height: 47px; top: 70%; left: -115px; animation-delay: 6s; animation-duration: 41s; }
+    .cloud9:before { width: 68px; height: 57px; top: -28px; left: 19px; }
+    .cloud9:after { width: 57px; height: 23px; top: -11px; right: 19px; }
+
+    .cloud10 { width: 100px; height: 40px; top: 10%; left: -100px; animation-delay: 20s; animation-duration: 37s; }
+    .cloud10:before { width: 60px; height: 50px; top: -25px; left: 15px; }
+    .cloud10:after { width: 50px; height: 20px; top: -10px; right: 15px; }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 150px)); }
+    }
+
+    /* Rain effect */
+    .rain-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .rain-container.active {
+      opacity: 1;
+    }
+
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.8));
+      animation: rainFall 1s linear infinite;
+    }
+
+    @keyframes rainFall {
+      0% { transform: translateY(-20px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0.3; }
+    }
+
+    /* Sun */
+    .sun {
+      position: absolute;
+      top: 10%;
+      right: 15%;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #FFD700, #FFA500);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+      animation: sunGlow 3s ease-in-out infinite alternate;
+      z-index: 1;
+      cursor: pointer;
+      transition: opacity 2s ease, transform 2s ease;
+    }
+
+    .sun.hidden {
+      opacity: 0;
+      transform: translateY(-100px);
+    }
+
+    .sun::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+      border-radius: 50%;
+      animation: sunRays 4s linear infinite;
+    }
+
+    @keyframes sunGlow {
+      0% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+      100% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.4); }
+    }
+
+    @keyframes sunRays {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Moon */
+    .moon {
+      position: absolute;
+      top: 10%;
+      right: 15%;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #f4f4f4, #d4d4d4);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(244, 244, 244, 0.6);
+      z-index: 1;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(-100px);
+      transition: opacity 2s ease, transform 2s ease;
+    }
+
+    .moon.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .moon::before {
+      content: '';
+      position: absolute;
+      top: 15%;
+      left: 20%;
+      width: 15px;
+      height: 15px;
+      background: rgba(200, 200, 200, 0.5);
+      border-radius: 50%;
+    }
+
+    .moon::after {
+      content: '';
+      position: absolute;
+      bottom: 30%;
+      right: 25%;
+      width: 10px;
+      height: 10px;
+      background: rgba(200, 200, 200, 0.5);
+      border-radius: 50%;
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    .stars.visible {
+      opacity: 1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 3px white;
+      animation: starTwinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Main content styles */
+    .circle {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: radial-gradient(circle at center, #ffffff, #e8f5e8);
+      border: 5px solid rgba(110, 191, 75, 0.5);
+      box-shadow: 
+        0 0 30px rgba(255, 255, 255, 0.9),
+        0 0 60px rgba(110, 191, 75, 0.4),
+        inset 0 0 25px rgba(110, 191, 75, 0.2);
+      margin-bottom: 30px;
+      animation: pulse 2s infinite ease-in-out, floatUpDown 3s infinite ease-in-out;
+      z-index: 2;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .circle:hover {
+      transform: scale(1.1) rotate(10deg);
+    }
+
+    .circle::before {
+      content: '🌱';
+      font-size: 3.5rem;
+      animation: leafSway 3s ease-in-out infinite alternate, leafGrow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 60px rgba(110, 191, 75, 0.4), inset 0 0 25px rgba(110, 191, 75, 0.2); }
+      50% { transform: scale(1.08); box-shadow: 0 0 40px rgba(255, 255, 255, 1), 0 0 80px rgba(110, 191, 75, 0.6), inset 0 0 35px rgba(110, 191, 75, 0.3); }
+    }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes leafSway {
+      0% { transform: rotate(-8deg) scale(1); }
+      100% { transform: rotate(8deg) scale(1.15); }
+    }
+
+    @keyframes leafGrow {
+      0%, 100% { filter: brightness(1) drop-shadow(0 0 10px rgba(110, 191, 75, 0.8)); }
+      50% { filter: brightness(1.3) drop-shadow(0 0 20px rgba(110, 191, 75, 1)); }
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 2.5rem; font-weight: 600;
+      color: #2d5016; margin-bottom: 20px;
+      letter-spacing: 3px;
+      text-shadow: 3px 3px 0px #6ebf4b, 5px 5px 10px rgba(0,0,0,0.2);
+      z-index: 2;
+      position: relative;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease forwards 0.5s, titleBounce 1s ease-in-out infinite 2s;
+    }
+
+    @keyframes titleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #4a7c59;
+      margin-bottom: 35px;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease forwards 0.8s;
+      z-index: 2;
+      position: relative;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #6ebf4b, #4e8d35);
+      border: 4px solid #fff; border-radius: 50px;
+      padding: 18px 50px; font-size: 1.3rem; font-weight: 700;
+      color: #fff; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 
+        0 10px 0px #3e7329,
+        0 15px 25px rgba(110, 191, 75, 0.4);
+      z-index: 2;
+      position: relative;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease forwards 1.2s;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    .start-btn:hover {
+      background: linear-gradient(135deg, #5ca63d, #3e7329);
+      transform: translateY(-8px) scale(1.08);
+      box-shadow: 
+        0 15px 0px #3e7329,
+        0 20px 30px rgba(110, 191, 75, 0.6);
+    }
+
+    .start-btn:focus {
+      outline: none;
+    }
+
+    .start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 
+        0 6px 0px #3e7329,
+        0 8px 15px rgba(110, 191, 75, 0.4);
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 300px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.3);
+      border: 3px solid #4e8d35;
+      border-radius: 15px;
+      margin-top: 30px;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease forwards 1.5s;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6ebf4b, #4e8d35, #6ebf4b);
+      background-size: 200% 100%;
+      animation: progressFill 8s ease-in-out forwards, progressShine 2s linear infinite;
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .progress-bar::after {
+      content: 'LOADING...';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    @keyframes progressFill {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes progressShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* Particles */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(110, 191, 75, 0.8);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(110, 191, 75, 0.6);
+      animation: particleFloat 15s infinite linear;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) translateX(0px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10px) translateX(100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Coin Animation */
+    .coin {
+      position: absolute;
+      font-size: 2rem;
+      animation: coinCollect 2s ease-out infinite;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    @keyframes coinCollect {
+      0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0.5) rotate(720deg); opacity: 0; }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    #main-content {
+      display: none; text-align: center; padding: 50px;
+      background: linear-gradient(135deg, #f0f8f0, #e8f5e8);
+      min-height: 100vh;
+    }
+
+    /* Weather status text */
+    .weather-status {
+      position: absolute;
+      top: 100px;
+      left: 30px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.8rem;
+      color: #2d5016;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 15px;
+      border: 3px solid #4e8d35;
+      z-index: 100;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards 2s;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .weather-status:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .weather-status:active {
+      transform: scale(0.95);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .subtitle { font-size: 0.9rem; }
+      .circle { width: 130px; height: 130px; }
+      .circle::before { font-size: 2.8rem; }
+      .start-btn { padding: 14px 35px; font-size: 1rem; }
+      .level-badge { font-size: 0.8rem; padding: 10px 20px; }
+      .progress-container { width: 250px; height: 25px; }
+      .weather-status { font-size: 0.6rem; left: 15px; top: 80px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <!-- Level Badge -->
+    <div class="level-badge">⭐ LEVEL 1</div>
+
+    <!-- Weather Status -->
+    <div class="weather-status" id="weatherStatus" onclick="changeWeather()">☀️ Sunny Day</div>
+
+    <!-- Achievement -->
+    <div class="achievement" id="achievement">🏆 Game Started! +50 XP</div>
+
+    <!-- Animated Clouds -->
+    <div class="clouds" id="cloudsContainer">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
+      <div class="cloud cloud4"></div>
+      <div class="cloud cloud5"></div>
+      <div class="cloud cloud6"></div>
+      <div class="cloud cloud7"></div>
+      <div class="cloud cloud8"></div>
+      <div class="cloud cloud9"></div>
+      <div class="cloud cloud10"></div>
+    </div>
+
+    <!-- Rain Container -->
+    <div class="rain-container" id="rainContainer"></div>
+
+    <!-- Sun -->
+    <div class="sun" id="sun" onclick="collectSun()"></div>
+
+    <!-- Moon -->
+    <div class="moon" id="moon"></div>
+
+    <!-- Stars -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particleContainer">
+      <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+      <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+      <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+      <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+      <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+      <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+      <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+      <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+      <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="circle" onclick="collectPlant()"></div>
+    <h1>Leaf it Up!</h1>
+    <p class="subtitle">Growing your green dreams into reality</p>
+    <button class="start-btn" onclick="startApp()">Start Journey</button>
+    
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <h2>🌿 Welcome to Leaf it Up!</h2>
+    <p>Your journey into the world of plants and nature begins here. Discover, learn, and grow with our comprehensive plant care guide and community.</p>
+  </div>
+
+  <script>
+    // Sound effects using Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(frequency, duration, type = 'sine') {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = type;
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration);
+    }
+
+    function playCoinSound() {
+      playSound(800, 0.1);
+      setTimeout(() => playSound(1000, 0.1), 50);
+    }
+
+    // Mario-style jump/start sound
+    function playMarioStartSound() {
+      const notes = [
+        { freq: 659.25, time: 0, duration: 0.1 },
+        { freq: 783.99, time: 0.1, duration: 0.1 },
+        { freq: 1046.50, time: 0.2, duration: 0.15 },
+        { freq: 1318.51, time: 0.35, duration: 0.2 }
+      ];
+      
+      notes.forEach(note => {
+        setTimeout(() => {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.value = note.freq;
+          oscillator.type = 'square';
+          
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + note.duration);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + note.duration);
+        }, note.time * 1000);
+      });
+    }
+
+    function playSuccessSound() {
+      playSound(523, 0.1);
+      setTimeout(() => playSound(659, 0.1), 100);
+      setTimeout(() => playSound(784, 0.2), 200);
+    }
+
+    // Weather system
+    let currentWeather = 'sunny';
+
+    function createRaindrops() {
+      const rainContainer = document.getElementById('rainContainer');
+      rainContainer.innerHTML = '';
+      for (let i = 0; i < 100; i++) {
+        const raindrop = document.createElement('div');
+        raindrop.className = 'raindrop';
+        raindrop.style.left = Math.random() * 100 + '%';
+        raindrop.style.animationDelay = Math.random() * 2 + 's';
+        raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+        rainContainer.appendChild(raindrop);
+      }
+    }
+
+    function createStars() {
+      const starsContainer = document.getElementById('starsContainer');
+      starsContainer.innerHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    function changeWeather() {
+      const loader = document.getElementById('loader');
+      const sun = document.getElementById('sun');
+      const moon = document.getElementById('moon');
+      const rainContainer = document.getElementById('rainContainer');
+      const starsContainer = document.getElementById('starsContainer');
+      const weatherStatus = document.getElementById('weatherStatus');
+      const clouds = document.querySelectorAll('.cloud');
+
+      playClickSound();
+
+      if (currentWeather === 'sunny') {
+        // Change to rainy
+        currentWeather = 'rainy';
+        loader.className = 'rainy';
+        weatherStatus.textContent = '🌧️ Rainy Day';
+        sun.classList.add('hidden');
+        moon.classList.remove('visible');
+        starsContainer.classList.remove('visible');
+        clouds.forEach(cloud => cloud.classList.add('dark'));
+        createRaindrops();
+        rainContainer.classList.add('active');
+      } else if (currentWeather === 'rainy') {
+        // Change to sunset
+        currentWeather = 'sunset';
+        loader.className = 'sunset';
+        weatherStatus.textContent = '🌅 Sunset';
+        sun.classList.remove('hidden');
+        moon.classList.remove('visible');
+        rainContainer.classList.remove('active');
+        starsContainer.classList.remove('visible');
+        clouds.forEach(cloud => cloud.classList.remove('dark'));
+      } else if (currentWeather === 'sunset') {
+        // Change to night
+        currentWeather = 'night';
+        loader.className = 'night';
+        weatherStatus.textContent = '🌙 Night Time';
+        sun.classList.add('hidden');
+        moon.classList.add('visible');
+        starsContainer.classList.add('visible');
+        createStars();
+        clouds.forEach(cloud => cloud.classList.add('dark'));
+      } else {
+        // Change back to sunny
+        currentWeather = 'sunny';
+        loader.className = '';
+        weatherStatus.textContent = '☀️ Sunny Day';
+        sun.classList.remove('hidden');
+        moon.classList.remove('visible');
+        rainContainer.classList.remove('active');
+        starsContainer.classList.remove('visible');
+        clouds.forEach(cloud => cloud.classList.remove('dark'));
+      }
+    }
+
+    function playClickSound() {
+      playSound(800, 0.1, 'square');
+    }
+
+    // Collect plant function
+    function collectPlant() {
+      playCoinSound();
+      
+      const circle = document.querySelector('.circle');
+      const rect = circle.getBoundingClientRect();
+      const coin = document.createElement('div');
+      coin.className = 'coin';
+      coin.textContent = '🪙';
+      coin.style.left = rect.left + rect.width / 2 + 'px';
+      coin.style.top = rect.top + 'px';
+      document.body.appendChild(coin);
+      
+      setTimeout(() => coin.remove(), 2000);
+    }
+
+    // Collect sun function
+    function collectSun() {
+      playSuccessSound();
+      
+      const sun = document.querySelector('.sun');
+      sun.style.transform = 'scale(1.3)';
+      setTimeout(() => sun.style.transform = 'scale(1)', 300);
+    }
+
+    // Start app function
+    function startApp() {
+      playMarioStartSound();
+      
+      const loader = document.getElementById("loader");
+      const startBtn = document.querySelector('.start-btn');
+      startBtn.innerHTML = 'Loading...';
+      startBtn.style.background = 'linear-gradient(135deg, #5ca63d, #3e7329)';
+      startBtn.disabled = true;
+      
+      loader.style.transform = "scale(0.95)";
+      loader.style.opacity = "0";
+      loader.style.visibility = "hidden";
+      
+      setTimeout(() => {
+        if (window.location.protocol === 'file:') {
+          try {
+            window.open('login.html', '_self');
+          } catch (e) {
+            window.location = 'login.html';
+          }
+        } else {
+          window.location.href = 'login.html';
+        }
+      }, 800);
+    }
+
+    // Show achievement after delay
+    setTimeout(() => {
+      const achievement = document.getElementById('achievement');
+      achievement.style.animation = 'achievementSlide 4s ease-in-out';
+      playSuccessSound();
+    }, 2000);
+
+    // Auto-cycle weather every 10 seconds for demo
+    setInterval(() => {
+      changeWeather();
+    }, 10000);
+  </script>
+</body>
+</html>
