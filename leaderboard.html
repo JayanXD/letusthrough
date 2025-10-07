@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leaf it Up! — Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0a3d2e 0%, #1a5c4a 50%, #0d2f26 100%);
+      color: #c5f5d7;
+      min-height: 100vh;
+    }
+
+    .page-bg {
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background: rgba(10, 50, 40, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: #6effb4;
+      text-shadow: 0 0 20px rgba(110, 255, 180, 0.6);
+    }
+
+    .userpanel {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-name {
+      color: #6effb4;
+      font-weight: 600;
+    }
+
+    .user-points {
+      background: rgba(110, 255, 180, 0.1);
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 2px solid rgba(110, 255, 180, 0.3);
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .leaf {
+      font-size: 18px;
+    }
+
+    .avatar {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Content Area */
+    .content-area {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: rgba(15, 60, 50, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 25px;
+      color: #c5f5d7;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+
+    .nav-item:hover {
+      background: rgba(110, 255, 180, 0.1);
+      border-left: 4px solid #6effb4;
+      color: #6effb4;
+    }
+
+    .nav-item.active {
+      background: rgba(110, 255, 180, 0.15);
+      border-left: 4px solid #6effb4;
+      color: #6effb4;
+    }
+
+    .icon {
+      font-size: 20px;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      background: rgba(20, 70, 60, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      color: #6effb4;
+      text-align: center;
+      margin-bottom: 40px;
+      text-shadow: 0 0 20px rgba(110, 255, 180, 0.4);
+    }
+
+    /* Podium */
+    .podium-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 30px;
+      margin-bottom: 50px;
+      padding: 20px;
+    }
+
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .podium-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .podium-avatar.green {
+      background: linear-gradient(135deg, #7ed957, #5fb83d);
+    }
+
+    .podium-avatar.purple {
+      background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+    }
+
+    .podium-avatar.olive {
+      background: linear-gradient(135deg, #9ca86f, #7a8556);
+    }
+
+    .first-place .podium-avatar {
+      width: 120px;
+      height: 120px;
+      font-size: 60px;
+    }
+
+    .podium-rank {
+      font-size: 18px;
+      font-weight: bold;
+      color: #6effb4;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .first-place .podium-rank {
+      font-size: 24px;
+    }
+
+    .podium-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #c5f5d7;
+      margin-bottom: 5px;
+    }
+
+    .podium-points {
+      font-size: 14px;
+      color: #a8e6cf;
+    }
+
+    .podium-item:hover .podium-avatar {
+      transform: scale(1.1);
+      box-shadow: 0 12px 40px rgba(110, 255, 180, 0.4);
+    }
+
+    /* Rankings List */
+    .rankings-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .rank-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 30px;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .rank-row:hover {
+      transform: translateX(10px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .rank-row.lime {
+      background: rgba(156, 204, 101, 0.3);
+    }
+
+    .rank-row.orange {
+      background: rgba(255, 152, 102, 0.3);
+    }
+
+    .rank-row.peach {
+      background: rgba(255, 179, 153, 0.3);
+    }
+
+    .rank-position {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2d3748;
+      min-width: 60px;
+    }
+
+    .rank-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+    }
+
+    .rank-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #6effb4, #4dcc8f);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .rank-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2d3748;
+    }
+
+    .rank-points {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2d3748;
+      min-width: 100px;
+      text-align: right;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content-area {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .podium-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .podium-item {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg">
+    <div class="container">
+      <header class="topbar">
+        <h1 class="brand">Leaf it Up!</h1>
+        <div class="userpanel">
+          <div id="user-name-4" class="user-name">Guest</div>
+          <div id="user-points-4" class="user-points">0 <span class="leaf">🍃</span></div>
+          <div class="avatar">👤</div>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <aside class="sidebar">
+          <nav>
+            <a href="index.html" class="nav-item"><span class="icon">🏠</span>Home</a>
+            <a href="myplants.html" class="nav-item"><span class="icon">🌱</span>My Plants</a>
+            <a href="tips.html" class="nav-item"><span class="icon">💡</span>Tips</a>
+            <a href="leaderboard.html" class="nav-item active"><span class="icon">🏆</span>Leaderboard</a>
+            <a href="community.html" class="nav-item"><span class="icon">🤝</span>Community Progress</a>
+            <a href="rewards.html" class="nav-item"><span class="icon">🎁</span>Reward</a>
+          </nav>
+        </aside>
+
+        <main class="main">
+          <h2 class="page-title">🏆 LEADERBOARDS</h2>
+
+          <!-- Top 3 Podium -->
+          <div class="podium-container">
+            <div class="podium-item second-place">
+              <div class="podium-avatar purple">
+                <span>👤</span>
+              </div>
+              <div class="podium-rank">2nd</div>
+              <div class="podium-name">PLAYER2</div>
+              <div class="podium-points">1500PTS</div>
+            </div>
+            
+            <div class="podium-item first-place">
+              <div class="podium-avatar green">
+                <span>👤</span>
+              </div>
+              <div class="podium-rank">1ST</div>
+              <div class="podium-name">PLAYER1</div>
+              <div class="podium-points">2000PTS</div>
+            </div>
+            
+            <div class="podium-item third-place">
+              <div class="podium-avatar olive">
+                <span>👤</span>
+              </div>
+              <div class="podium-rank">3RD</div>
+              <div class="podium-name">PLAYER3</div>
+              <div class="podium-points">1350PTS</div>
+            </div>
+          </div>
+
+          <!-- Rankings 4-9 -->
+          <div class="rankings-list">
+            <div class="rank-row lime">
+              <div class="rank-position">4th</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER5</span>
+              </div>
+              <div class="rank-points">1230PTS</div>
+            </div>
+
+            <div class="rank-row orange">
+              <div class="rank-position">5th</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER4</span>
+              </div>
+              <div class="rank-points">1000PTS</div>
+            </div>
+
+            <div class="rank-row peach">
+              <div class="rank-position">6th</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER6</span>
+              </div>
+              <div class="rank-points">825PTS</div>
+            </div>
+
+            <div class="rank-row lime">
+              <div class="rank-position">7TH</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER5</span>
+              </div>
+              <div class="rank-points">500PTS</div>
+            </div>
+
+            <div class="rank-row orange">
+              <div class="rank-position">8TH</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER4</span>
+              </div>
+              <div class="rank-points">300PTS</div>
+            </div>
+
+            <div class="rank-row peach">
+              <div class="rank-position">9TH</div>
+              <div class="rank-info">
+                <div class="rank-avatar">👤</div>
+                <span class="rank-name">PLAYER6</span>
+              </div>
+              <div class="rank-points">205PTS</div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load user data from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const userName = localStorage.getItem('userName') || 'Guest';
+      const userPoints = localStorage.getItem('userPoints') || '0';
+      
+      document.getElementById('user-name-4').textContent = userName;
+      document.getElementById('user-points-4').innerHTML = userPoints + ' <span class="leaf">🍃</span>';
+    });
+  </script>
+</body>
+</html>
+
+
