@@ -38,7 +38,8 @@
         body.day-mode .modal-content,
         body.day-mode .plant-card,
         body.day-mode .tip-card,
-        body.day-mode .mission-card {
+        body.day-mode .mission-card,
+        body.day-mode .announcement-board {
             background: rgba(255, 255, 255, 0.2);
         }
 
@@ -400,6 +401,293 @@
             color: #4dcc8f;
         }
 
+        .announcement-board {
+            background: rgba(20, 70, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            transition: background 0.5s ease;
+        }
+
+        .announcement-board h2 {
+            color: #ffd700;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .announcements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .announcement-item {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .announcement-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .announcement-title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .announcement-date {
+            color: #a8e6cf;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .announcement-content {
+            color: #c5f5d7;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .announcement-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .announcement-type.news {
+            background: rgba(110, 255, 180, 0.2);
+            color: #6effb4;
+            border: 1px solid rgba(110, 255, 180, 0.4);
+        }
+
+        .announcement-type.event {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+        }
+
+        .announcement-type.update {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .no-announcements {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a8e6cf;
+        }
+
+        .no-announcements-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .points-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            z-index: 3000;
+            background: linear-gradient(135deg, rgba(110, 255, 180, 0.95), rgba(77, 204, 143, 0.95));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px 60px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(110, 255, 180, 0.6), 0 0 100px rgba(110, 255, 180, 0.4);
+            border: 4px solid #6effb4;
+            min-width: 400px;
+            animation: popupAppear 0.3s ease forwards;
+        }
+
+        .points-popup.active {
+            display: block;
+        }
+
+        @keyframes popupAppear {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes popupDisappear {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .points-popup.closing {
+            animation: popupDisappear 0.3s ease forwards;
+        }
+
+        .points-popup-icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+            animation: bounce 0.6s infinite;
+        }
+
+        .points-popup-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0a3d2e;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-popup-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            z-index: 3000;
+            background: linear-gradient(135deg, rgba(255, 152, 102, 0.95), rgba(255, 179, 153, 0.95));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255, 152, 102, 0.6), 0 0 100px rgba(255, 152, 102, 0.4);
+            border: 4px solid #ff9866;
+            max-width: 500px;
+            animation: popupAppear 0.3s ease forwards;
+        }
+
+        .info-popup.active {
+            display: block;
+        }
+
+        .info-popup.closing {
+            animation: popupDisappear 0.3s ease forwards;
+        }
+
+        .info-popup-icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+        }
+
+        .info-popup-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a2c1a;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-popup-message {
+            font-size: 16px;
+            color: #6d4c3d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .info-popup-close {
+            padding: 12px 30px;
+            background: #4a2c1a;
+            color: #ff9866;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-popup-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .update-picture-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 10px;
+            color: #a78bfa;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .update-picture-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: #a78bfa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .log-plant-btn-top {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            background: linear-gradient(135deg, #6effb4, #4dcc8f);
+            border: none;
+            border-radius: 10px;
+            color: #0a3d2e;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(110, 255, 180, 0.4);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .log-plant-btn-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(110, 255, 180, 0.6);
+        }
+
         .daily-missions-section {
             background: rgba(20, 70, 60, 0.6);
             backdrop-filter: blur(10px);
@@ -575,7 +863,7 @@
             font-size: 24px;
             margin-bottom: 15px;
             text-shadow: 0 0 15px rgba(110, 255, 180, 0.3);
-        }
+}
 
         .feature-card p {
             color: #a8e6cf;
@@ -1553,7 +1841,8 @@
             display: block;
         }
 
-        .profile-container {
+        .profile
+-container {
             max-width: 900px;
             margin: 0 auto;
         }
@@ -1843,7 +2132,8 @@
             border-color: #6effb4;
             box-shadow: 0 5px 20px rgba(110, 255, 180, 0.3);
         }
-.account-item.active {
+
+        .account-item.active {
             border-color: #6effb4;
             background: rgba(110, 255, 180, 0.1);
         }
@@ -2046,17 +2336,17 @@
                 transform: scale(1.05);
             }
 
-            .level-up-notification {
+            .level-up-notification, .points-popup, .info-popup {
                 min-width: 90%;
                 padding: 30px 20px;
             }
 
-            .level-up-text {
-                font-size: 32px;
+            .level-up-text, .points-popup-text, .info-popup-title {
+                font-size: 28px;
             }
 
-            .level-up-number {
-                font-size: 56px;
+            .level-up-number, .points-popup-amount {
+                font-size: 48px;
             }
 
             .profile-header-card {
@@ -2086,6 +2376,19 @@
         <div class="raindrop"></div>
         <div class="raindrop"></div>
         <div class="raindrop"></div>
+    </div>
+
+    <div class="points-popup" id="pointsPopup">
+        <div class="points-popup-icon">🎉</div>
+        <div class="points-popup-text">You Got Points!</div>
+        <div class="points-popup-amount" id="pointsPopupAmount">+50</div>
+    </div>
+
+    <div class="info-popup" id="infoPopup">
+        <div class="info-popup-icon">⚠️</div>
+        <div class="info-popup-title" id="infoPopupTitle">Cannot Claim Points</div>
+        <div class="info-popup-message" id="infoPopupMessage">Please complete the required action first.</div>
+        <button class="info-popup-close" onclick="closeInfoPopup()">Got It</button>
     </div>
 
     <div class="level-up-overlay" id="levelUpOverlay"></div>
@@ -2226,6 +2529,22 @@
         </div>
     </div>
 
+    <div id="updatePlantPictureModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>📸 Update Plant Picture</h2>
+                <button class="close-btn" onclick="closeUpdatePlantPictureModal()">&times;</button>
+            </div>
+            <div id="currentPlantPicturePreview" style="text-align: center; margin-bottom: 20px;"></div>
+            <div class="form-group">
+                <label>Upload New Picture</label>
+                <input type="file" id="updatePlantImage" accept="image/*" onchange="previewNewPlantImage(event)">
+                <div id="newPlantImagePreview" style="margin-top: 15px; text-align: center;"></div>
+            </div>
+            <button class="submit-btn" onclick="saveUpdatedPlantPicture()">💾 Update Picture</button>
+        </div>
+    </div>
+
     <div class="header">
         <div class="header-left">
             <div class="logo">
@@ -2292,11 +2611,14 @@
                     <p id="greetingSubtext">Welcome to your plant tracking dashboard</p>
                 </div>
 
-                <div class="daily-missions-section">
-                    <h2>⭐ Daily Missions</h2>
-                    <div class="missions-grid" id="dailyMissionsGrid"></div>
-                    <div class="mission-timer">
-                        <p class="mission-timer-text">⏰ Missions reset in: <span id="missionTimer">00:00:00</span></p>
+                <div class="announcement-board">
+                    <h2>📢 Announcements & Events</h2>
+                    <div class="announcements-list" id="announcementsList">
+                        <div class="no-announcements">
+                            <div class="no-announcements-icon">📭</div>
+                            <h3 style="color: #a8e6cf; margin-bottom: 10px;">No Announcements for Today</h3>
+                            <p style="color: #8dc5a7;">Check back later for updates and events!</p>
+                        </div>
                     </div>
                 </div>
 
@@ -2317,9 +2639,20 @@
                         <p>Learn expert advice to keep your plants healthy and thriving</p>
                     </div>
                 </div>
+
+                <div class="daily-missions-section">
+                    <h2>⭐ Daily Missions</h2>
+                    <div class="missions-grid" id="dailyMissionsGrid"></div>
+                    <div class="mission-timer">
+                        <p class="mission-timer-text">⏰ Missions reset in: <span id="missionTimer">00:00:00</span></p>
+                    </div>
+                </div>
             </div>
 
             <div id="plants" class="page-section">
+                <button class="log-plant-btn-top" onclick="openLogPlantModal()">
+                    📝 Log New Plant
+                </button>
                 <h2 style="color: #6effb4; font-size: 32px; margin-bottom: 20px;">🌿 My Plant Library</h2>
                 <div id="plantsContainer" class="plants-grid">
                     <div class="empty-state">
@@ -2485,7 +2818,7 @@
                             <div class="profile-avatar-large" id="profileAvatar">👤</div>
                             <button class="change-avatar-btn" onclick="openAvatarModal()">Change Photo</button>
                         </div>
-                      <div class="profile-info-section">
+                        <div class="profile-info-section">
                             <div class="profile-name-large" id="profileDisplayName">Planter</div>
                             <button class="edit-bio-btn" onclick="openEditNameModal()" style="margin-bottom: 15px;">Change Name</button>
                             <div class="profile-stats">
@@ -2690,6 +3023,36 @@
             oscillator.stop(audioContext.currentTime + 0.5);
         }
 
+        function showPointsPopup(points) {
+            const popup = document.getElementById('pointsPopup');
+            const amountEl = document.getElementById('pointsPopupAmount');
+            amountEl.textContent = '+' + points;
+            popup.classList.add('active');
+            playClaimSound();
+            
+            setTimeout(() => {
+                popup.classList.add('closing');
+                setTimeout(() => {
+                    popup.classList.remove('active', 'closing');
+                }, 300);
+            }, 1500);
+        }
+
+        function showInfoPopup(title, message) {
+            const popup = document.getElementById('infoPopup');
+            document.getElementById('infoPopupTitle').textContent = title;
+            document.getElementById('infoPopupMessage').textContent = message;
+            popup.classList.add('active');
+        }
+
+        function closeInfoPopup() {
+            const popup = document.getElementById('infoPopup');
+            popup.classList.add('closing');
+            setTimeout(() => {
+                popup.classList.remove('active', 'closing');
+            }, 300);
+        }
+
         let plants = [];
         let userPoints = 0;
         let currentLevel = 1;
@@ -2711,6 +3074,9 @@
         };
         let activityLog = [];
         let notifications = [];
+        let currentPlantIndexForUpdate = null;
+        
+        let announcements = [];
         
         const dailyMissionsTemplate = [
             { id: 1, title: 'Morning Check-In', description: 'Log into Leaf It Up to check your plants', points: 25, icon: '🌅', completed: false },
@@ -2753,6 +3119,101 @@
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
         });
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcementsList');
+            
+            if (announcements.length === 0) {
+                container.innerHTML = `
+                    <div class="no-announcements">
+                        <div class="no-announcements-icon">📭</div>
+                        <h3 style="color: #a8e6cf; margin-bottom: 10px;">No Announcements for Today</h3>
+                        <p style="color: #8dc5a7;">Check back later for updates and events!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sortedAnnouncements = [...announcements].sort((a, b) => new Date(b.date) - new Date(a.date));
+            container.innerHTML = sortedAnnouncements.map(announcement => `
+                <div class="announcement-item">
+                    <div class="announcement-header">
+                        <div class="announcement-title">${announcement.title}</div>
+                        <div class="announcement-date">${new Date(announcement.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="announcement-content">${announcement.content}</div>
+                    <span class="announcement-type ${announcement.type}">
+                        ${announcement.type === 'news' ? '📰 News' : announcement.type === 'event' ? '📅 Event' : '🔔 Update'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function openUpdatePlantPictureModal(plantIndex) {
+            currentPlantIndexForUpdate = plantIndex;
+            const plant = plants[plantIndex];
+            const modal = document.getElementById('updatePlantPictureModal');
+            const currentPreview = document.getElementById('currentPlantPicturePreview');
+            
+            if (plant.image) {
+                currentPreview.innerHTML = `
+                    <p style="color: #a8e6cf; margin-bottom: 10px; font-weight: bold;">Current Picture:</p>
+                    <img src="${plant.image}" alt="${plant.name}" style="max-width: 250px; max-height: 250px; border-radius: 10px; border: 2px solid rgba(110, 255, 180, 0.3);">
+                `;
+            } else {
+                currentPreview.innerHTML = `
+                    <p style="color: #a8e6cf; margin-bottom: 10px;">No current picture available</p>
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, rgba(110, 255, 180, 0.1), rgba(77, 204, 143, 0.1)); border-radius: 10px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 60px; border: 2px dashed rgba(110, 255, 180, 0.3);">🌿</div>
+                `;
+            }
+            
+            document.getElementById('newPlantImagePreview').innerHTML = '';
+            document.getElementById('updatePlantImage').value = '';
+            modal.classList.add('active');
+        }
+
+        function closeUpdatePlantPictureModal() {
+            document.getElementById('updatePlantPictureModal').classList.remove('active');
+            currentPlantIndexForUpdate = null;
+        }
+
+        function previewNewPlantImage(event) {
+            const preview = document.getElementById('newPlantImagePreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <p style="color: #6effb4; margin-bottom: 10px; font-weight: bold;">New Picture Preview:</p>
+                        <img src="${e.target.result}" alt="New Preview" style="max-width: 250px; max-height: 250px; border-radius: 10px; border: 2px solid rgba(110, 255, 180, 0.4); box-shadow: 0 4px 15px rgba(110, 255, 180, 0.3);">
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveUpdatedPlantPicture() {
+            if (currentPlantIndexForUpdate === null) return;
+            
+            const imageInput = document.getElementById('updatePlantImage');
+            if (!imageInput.files || !imageInput.files[0]) {
+                showInfoPopup('No Image Selected', 'Please select a new image first before updating!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                plants[currentPlantIndexForUpdate].image = e.target.result;
+                addActivity(`Updated picture for plant: ${plants[currentPlantIndexForUpdate].name}`, '📸');
+                addNotification('📸 Picture Updated', `You updated the picture for ${plants[currentPlantIndexForUpdate].name}!`, 'plant', plants[currentPlantIndexForUpdate].name, 'plants');
+                saveData();
+                renderPlants();
+                renderProfilePlants();
+                closeUpdatePlantPictureModal();
+                alert('Plant picture updated successfully!');
+            };
+            reader.readAsDataURL(imageInput.files[0]);
+        }
 
         function setMaxDate() {
             const today = new Date().toISOString().split('T')[0];
@@ -2909,25 +3370,26 @@
         function completeMission(missionId) {
             const mission = dailyMissions.find(m => m.id === missionId);
             if (!mission || mission.completed) return;
+            
             if (missionId === 2 && plants.length === 0) {
-                alert('Please log a plant first to complete this mission!');
+                showInfoPopup('Cannot Complete Mission', 'Please log at least one plant first to complete this mission!');
                 return;
             }
             if (missionId === 4 && !sessionStorage.getItem('visitedTips')) {
-                alert('Please visit the Tips section first!');
+                showInfoPopup('Cannot Complete Mission', 'Please visit the Tips section first to complete this mission!');
                 return;
             }
             if (missionId === 5 && !sessionStorage.getItem('visitedCommunity')) {
-                alert('Please visit the Community Progress page first!');
+                showInfoPopup('Cannot Complete Mission', 'Please visit the Community Progress page first to complete this mission!');
                 return;
             }
+            
             mission.completed = true;
             addPoints(mission.points);
-            playClaimSound();
+            showPointsPopup(mission.points);
             addActivity(`Completed daily mission: ${mission.title}`, '⭐');
             saveData();
             renderDailyMissions();
-            alert(`🎉 Mission completed! You earned ${mission.points} points!`);
         }
 
         function updateMissionTimer() {
@@ -2949,19 +3411,19 @@
         function waterPlant(plantIndex) {
             const plant = plants[plantIndex];
             if (!canWaterToday(plant)) {
-                alert('⚠️ You have already watered this plant today! Plants can only be watered once per day to prevent overwatering.');
+                showInfoPopup('Already Watered', 'You have already watered this plant today! Plants can only be watered once per day to prevent overwatering.');
                 return;
             }
             if (!plant.wateringLog) plant.wateringLog = [];
             const now = new Date().toISOString();
             plant.wateringLog.push(now);
             addPoints(30);
+            showPointsPopup(30);
             playWaterSound();
             addActivity(`Watered plant: ${plant.name}`, '💧');
             addNotification('💧 Plant Watered', `You watered ${plant.name}! Keep up the great care!`, 'water', null, 'plants');
             saveData();
             renderPlants();
-            alert(`💧 ${plant.name} has been watered! You earned 30 points!`);
         }
 
         function addNotification(title, message, type, plantName, redirectTo) {
@@ -3077,9 +3539,11 @@
         function loadData() {
             const savedAccounts = localStorage.getItem('accounts');
             const savedCurrentAccount = localStorage.getItem('currentAccountId');
+            const savedAnnouncements = localStorage.getItem('announcements');
             
             if (savedAccounts) accounts = JSON.parse(savedAccounts);
             if (savedCurrentAccount) currentAccountId = savedCurrentAccount;
+            if (savedAnnouncements) announcements = JSON.parse(savedAnnouncements);
             
             if (!accounts[currentAccountId]) {
                 accounts[currentAccountId] = {
@@ -3096,7 +3560,7 @@
                 };
             }
             
-         const account = accounts[currentAccountId];
+            const account = accounts[currentAccountId];
             userProfile = account.profile;
             userPoints = account.points;
             currentLevel = account.level;
@@ -3128,6 +3592,7 @@
             };
             localStorage.setItem('accounts', JSON.stringify(accounts));
             localStorage.setItem('currentAccountId', currentAccountId);
+            localStorage.setItem('announcements', JSON.stringify(announcements));
         }
 
         function openSettingsModal() {
@@ -3156,19 +3621,19 @@
             const confirm = document.getElementById('confirmPassword').value;
             
             if (!current || !newPass || !confirm) {
-                alert('Please fill in all fields!');
+                showInfoPopup('Missing Information', 'Please fill in all password fields!');
                 return;
             }
             if (current !== userProfile.password) {
-                alert('Current password is incorrect!');
+                showInfoPopup('Incorrect Password', 'Current password is incorrect!');
                 return;
             }
             if (newPass !== confirm) {
-                alert('New passwords do not match!');
+                showInfoPopup('Password Mismatch', 'New passwords do not match!');
                 return;
             }
             if (newPass.length < 6) {
-                alert('Password must be at least 6 characters long!');
+                showInfoPopup('Password Too Short', 'Password must be at least 6 characters long!');
                 return;
             }
             userProfile.password = newPass;
@@ -3272,7 +3737,7 @@
                 saveData();
                 alert('Signed in successfully!');
             } else {
-                alert('Invalid username or password!');
+                showInfoPopup('Login Failed', 'Invalid username or password!');
             }
         }
 
@@ -3285,12 +3750,12 @@
 
             const usernameExists = Object.values(accounts).some(acc => acc.profile.username === username);
             if (usernameExists) {
-                alert('Username already exists! Please choose a different username.');
+                showInfoPopup('Username Taken', 'Username already exists! Please choose a different username.');
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert('Passwords do not match!');
+                showInfoPopup('Password Mismatch', 'Passwords do not match!');
                 return;
             }
 
@@ -3356,7 +3821,7 @@
             const nameInput = document.getElementById('setupNameInput');
             const name = nameInput.value.trim();
             if (name === '') {
-                alert('Please enter your name!');
+                showInfoPopup('Name Required', 'Please enter your name!');
                 return;
             }
             userProfile.name = name;
@@ -3411,12 +3876,12 @@
             const input = document.getElementById('editNameInput');
             const newName = input.value.trim();
             if (newName === '') {
-                alert('Please enter a name!');
+                showInfoPopup('Name Required', 'Please enter a name!');
                 return;
             }
             const canChange = !userProfile.lastNameChange || (Date.now() - userProfile.lastNameChange) >= 604800000;
             if (!canChange) {
-                alert('You can only change your name once per week!');
+                showInfoPopup('Cannot Change Name', 'You can only change your name once per week!');
                 return;
             }
             userProfile.name = newName;
@@ -3552,7 +4017,7 @@
                 };
                 reader.readAsDataURL(imageInput.files[0]);
             } else {
-                alert('Please select an image first!');
+                showInfoPopup('No Image Selected', 'Please select an image first!');
             }
         }
 
@@ -3565,7 +4030,7 @@
         async function submitPlant(event) {
             event.preventDefault();
             if (!selectedLocation) {
-                alert('Please select a location on the map!');
+                showInfoPopup('Location Required', 'Please select a location on the map!');
                 return;
             }
             const locationName = await getLocationName(selectedLocation.lat, selectedLocation.lng);
@@ -3598,6 +4063,7 @@
         function savePlant(plantData) {
             plants.push(plantData);
             addPoints(50);
+            showPointsPopup(50);
             if (plants.length >= 5) {
                 const task = tasks.find(t => t.id === 6);
                 if (task && !task.completed) {
@@ -3610,7 +4076,6 @@
             saveData();
             renderPlants();
             closeLogPlantModal();
-            alert('🎉 Plant logged successfully! You earned 50 points!');
         }
 
         function addPoints(points) {
@@ -3694,17 +4159,18 @@
         function claimTask(taskId) {
             const task = tasks.find(t => t.id === taskId);
             if (!task || task.completed) return;
+            
             if (taskId === 6 && plants.length < 5) {
-                alert('You need to log 5 plants first to claim this reward!');
+                showInfoPopup('Cannot Claim Points', 'You need to log 5 plants first to claim this reward! Current plants logged: ' + plants.length);
                 return;
             }
+            
             task.completed = true;
             addPoints(task.points);
-            playClaimSound();
+            showPointsPopup(task.points);
             addActivity(`Completed task: ${task.title}`, '⭐');
             saveData();
             renderTasks();
-            alert(`🎉 Task completed! You earned ${task.points} points!`);
         }
 
         function renderPlants() {
@@ -3750,6 +4216,9 @@
                         <div class="plant-actions">
                             <button class="water-btn" onclick="event.stopPropagation(); waterPlant(${index})" ${!canWater ? 'disabled' : ''}>
                                 💧 ${canWater ? 'Water Plant' : 'Already Watered Today'}
+                            </button>
+                            <button class="update-picture-btn" onclick="event.stopPropagation(); openUpdatePlantPictureModal(${index})">
+                                📸 Update Picture
                             </button>
                             <p class="last-watered">Last watered: ${lastWatered}</p>
                         </div>
@@ -3875,7 +4344,7 @@
             } else {
                 document.getElementById('player2Name').textContent = '---';
                 document.getElementById('player2Points').textContent = '0 PTS';
-document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
+                document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
             }
             if (sortedData.length >= 3) {
                 document.getElementById('player3Name').textContent = sortedData[2].name || 'Player 3';
@@ -3954,7 +4423,7 @@ document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
                 renderRedemptionHistory();
                 alert(`🎉 Successfully redeemed ${item.name} for ${item.price} points! Your request is pending approval.`);
             } else {
-                alert(`❌ Not enough points! You need ${item.price - userPoints} more points.`);
+                showInfoPopup('Not Enough Points', `You need ${item.price - userPoints} more points to redeem this item!`);
             }
         }
 
@@ -4115,6 +4584,7 @@ document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
             renderRedemptionHistory();
             renderTasks();
             renderDailyMissions();
+            renderAnnouncements();
             updateCommunityStats();
             updateLeaderboard();
             updateProfilePage();
@@ -4142,6 +4612,7 @@ document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
     </script>
 </body>
 </html>
+
 
 
 
