@@ -1072,8 +1072,8 @@
                     levelBadge.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a6f)';
                 }, 500);
                 
-                // Only redirect for login form (first form, index 0)
-                if (index === 0) {
+                // Redirect for login form (index 0) and create account form (index 1)
+                if (index === 0 || index === 1) {
                     setTimeout(() => {
                         window.location.href = 'home.html';
                     }, 1500);
