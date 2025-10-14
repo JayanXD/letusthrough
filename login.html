@@ -273,21 +273,6 @@
             text-shadow: 0 0 20px rgba(34, 139, 34, 0.5), 0 0 40px rgba(34, 139, 34, 0.3);
         }
 
-        .level-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #1a1a1a;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            animation: pulse 2s infinite;
-            z-index: 10;
-        }
-
         .form-section {
             display: none;
             justify-content: center;
@@ -722,15 +707,8 @@
                 width: 100%;
             }
 
-            .level-badge {
-                top: 10px;
-                right: 10px;
-                padding: 8px 15px;
-                font-size: 12px;
-            }
-
             .mode-toggle {
-                top: 90px;
+                top: 10px;
                 left: 10px;
                 padding: 10px 20px;
                 font-size: 18px;
@@ -761,7 +739,6 @@
         <div class="tree-trunk"></div>
     </div>
 
-    <div class="level-badge">⭐ LEVEL 1</div>
     <div class="achievement-popup" id="achievementPopup">🏆 Achievement Unlocked!</div>
 
     <div class="container">
@@ -772,21 +749,6 @@
                 <div class="icon-badge">🌳</div>
                 <h2>Welcome!</h2>
                 <p class="subtitle">Enter the forest to begin your journey</p>
-                
-                <div class="stats-display">
-                    <div class="stat-item">
-                        <div class="stat-value">1</div>
-                        <div class="stat-label">Level</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">XP</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Lives</div>
-                    </div>
-                </div>
 
                 <form>
                     <div class="form-group">
@@ -838,7 +800,7 @@
                     </div>
                 </div>
 
-                <form>
+                <form id="createForm">
                     <div class="form-group">
                         <label>📧 Email:</label>
                         <div class="input-wrapper">
@@ -901,7 +863,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>🆕 New Password:</label>
+                      <label>🆕 New Password:</label>
                         <div class="input-wrapper">
                             <span class="input-icon">🆕</span>
                             <input type="password" id="newPassword" placeholder="Enter new password" required oninput="updatePasswordStrength(this)">
@@ -1060,23 +1022,29 @@
             }
         }
 
+        // Handle form submissions
         document.querySelectorAll('form').forEach((form, index) => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 playPowerupSound();
-                showAchievement('🎉 +50 XP Earned!');
                 
-                setTimeout(() => {
-                    const levelBadge = document.querySelector('.level-badge');
-                    levelBadge.textContent = '⭐ LEVEL 2';
-                    levelBadge.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a6f)';
-                }, 500);
-                
-                // Redirect for login form (index 0) and create account form (index 1)
-                if (index === 0 || index === 1) {
+                // For create account form (has id="createForm")
+                if (form.id === 'createForm') {
+                    showAchievement('✅ Account Created!');
+                    setTimeout(() => {
+                        showLogin(null);
+                    }, 2000);
+                } 
+                // For login form
+                else if (form.closest('#login')) {
+                    showAchievement('🎉 Logged In!');
                     setTimeout(() => {
                         window.location.href = 'home.html';
                     }, 1500);
+                }
+                // For change password and other forms
+                else {
+                    showAchievement('✅ Success!');
                 }
             });
         });
@@ -1102,3 +1070,6 @@
     </script>
 </body>
 </html>
+
+
+
