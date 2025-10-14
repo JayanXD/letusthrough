@@ -320,11 +320,11 @@
             position: fixed;
             left: 0;
             top: 70px;
-            width: 200px;
+            width: 220px;
             height: calc(100vh - 70px);
             background: rgba(15, 60, 50, 0.8);
             backdrop-filter: blur(10px);
-            padding: 30px 0;
+            padding: 40px 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
             transition: background 0.5s ease;
         }
@@ -333,12 +333,13 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 15px 30px;
+            padding: 18px 30px;
             color: #c5f5d7;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 8px;
         }
 
         .menu-item:hover {
@@ -346,19 +347,21 @@
             border-left: 4px solid #6effb4;
             color: #6effb4;
             text-shadow: 0 0 10px rgba(110, 255, 180, 0.5);
+            padding-left: 26px;
         }
 
         .menu-item.active {
             background: rgba(110, 255, 180, 0.15);
             border-left: 4px solid #6effb4;
             color: #6effb4;
+            padding-left: 26px;
         }
 
         .main-content {
-            margin-left: 200px;
+            margin-left: 220px;
             margin-top: 70px;
             padding: 40px;
-            width: calc(100% - 200px);
+            width: calc(100% - 220px);
         }
 
         .page-section {
@@ -819,6 +822,7 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-top: 30px;
+            margin-bottom: 50px;
         }
 
         .feature-card {
@@ -1018,6 +1022,47 @@
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 30px rgba(110, 255, 180, 0.6);
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        #locationSearch {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(110, 255, 180, 0.3);
+            background: rgba(10, 50, 40, 0.5);
+            color: #c5f5d7;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        #locationSearch:focus {
+            outline: none;
+            border-color: #6effb4;
+            box-shadow: 0 0 15px rgba(110, 255, 180, 0.3);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #6effb4, #4dcc8f);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #0a3d2e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 0 15px rgba(110, 255, 180, 0.5);
         }
 
         #map {
@@ -1799,13 +1844,7 @@
             font-weight: bold;
             color: #0a3d2e;
             margin: 20px 0;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .level-up-message {
-            font-size: 20px;
-            color: #1a5c4a;
-            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0, 0,0, 0.3);
         }
 
         .level-up-close {
@@ -1841,8 +1880,7 @@
             display: block;
         }
 
-        .profile
--container {
+        .profile-container {
             max-width: 900px;
             margin: 0 auto;
         }
@@ -2616,7 +2654,7 @@
                     <div class="announcements-list" id="announcementsList">
                         <div class="no-announcements">
                             <div class="no-announcements-icon">📭</div>
-                            <h3 style="color: #a8e6cf; margin-bottom: 10px;">No Announcements for Today</h3>
+                            <h3style="color: #a8e6cf; margin-bottom: 10px;">No Announcements for Today</h3>
                             <p style="color: #8dc5a7;">Check back later for updates and events!</p>
                         </div>
                     </div>
@@ -2903,7 +2941,12 @@
                     <input type="date" id="datePlanted" required>
                 </div>
                 <div class="form-group">
-                    <label>Plant Location (Click on map to pin) *</label>
+                    <label>Plant Location *</label>
+                    <div class="search-container">
+                        <input type="text" id="locationSearch" placeholder="Search for a location (e.g., Manila City Hall)">
+                        <button type="button" class="search-btn" onclick="searchLocation()">🔍</button>
+                    </div>
+                    <p style="color: #a8e6cf; font-size: 12px; margin-top: 5px;">Search for a place or click on the map to pin your location</p>
                     <div id="map"></div>
                     <input type="hidden" id="plantLat" required>
                     <input type="hidden" id="plantLng" required>
@@ -3119,6 +3162,46 @@
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
         });
+
+        // NEW FUNCTION: Search location using Nominatim
+        async function searchLocation() {
+            const searchQuery = document.getElementById('locationSearch').value.trim();
+            if (!searchQuery) {
+                showInfoPopup('Search Required', 'Please enter a location to search!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    
+                    // Remove existing marker
+                    if (plantMarker && map) {
+                        map.removeLayer(plantMarker);
+                    }
+                    
+                    // Add new marker at searched location
+                    plantMarker = L.marker([lat, lng], {icon: plantIcon}).addTo(map);
+                    map.setView([lat, lng], 15);
+                    
+                    selectedLocation = { lat: lat, lng: lng };
+                    document.getElementById('plantLat').value = lat;
+                    document.getElementById('plantLng').value = lng;
+                    
+                    const locationName = await getLocationName(lat, lng);
+                    document.getElementById('locationDisplay').textContent = `Selected: ${locationName}`;
+                } else {
+                    showInfoPopup('Location Not Found', 'Could not find the location. Please try a different search term or click on the map.');
+                }
+            } catch (error) {
+                console.error('Error searching location:', error);
+                    showInfoPopup('Search Error', 'An error occurred while searching. Please try again or click on the map.');
+                }
+            }
 
         function renderAnnouncements() {
             const container = document.getElementById('announcementsList');
@@ -3808,7 +3891,7 @@
         function confirmLogout() {
             localStorage.clear();
             sessionStorage.clear();
-            location.reload();
+            window.location.href = 'login.html'
         }
 
         function checkNameSetup() {
@@ -3833,7 +3916,7 @@
             document.getElementById('nameSetupModal').classList.remove('active');
         }
 
-        function updateGreeting() {
+      function updateGreeting() {
             const greetingText = document.getElementById('greetingText');
             const greetingSubtext = document.getElementById('greetingSubtext');
             if (userProfile.name && userProfile.name.trim() !== '') {
@@ -3962,6 +4045,7 @@
             document.getElementById('plantForm').reset();
             document.getElementById('imagePreview').innerHTML = '';
             document.getElementById('locationDisplay').textContent = 'Click on the map to select location';
+            document.getElementById('locationSearch').value = '';
             if (plantMarker && map) {
                 map.removeLayer(plantMarker);
                 plantMarker = null;
@@ -4517,6 +4601,227 @@
                         <h3>No plants logged yet!</h3>
                         <p>Start logging plants to see them here.</p>
                     </div>
+                `;return;
+            }
+
+            const recentPlants = [...plants].reverse().slice(0, 5);
+            container.innerHTML = recentPlants.map(plant => `
+                <div class="tip-card">
+                    <h3>🌱 ${plant.name}</h3>
+                    <p><strong>Location:</strong> ${plant.locationName || 'Unknown'} | <strong>Date:</strong> ${plant.datePlanted} | <strong>Age:</strong> ${calculatePlantAge(plant.datePlanted)}</p>
+                </div>
+            `).join('');
+        }
+
+        function updateLeaderboard() {
+            if (plants.length === 0) {
+                document.getElementById('player1Name').textContent = '---';
+                document.getElementById('player1Points').textContent = '0 PTS';
+                document.getElementById('podium1Avatar').innerHTML = '<span>👤</span>';
+                document.getElementById('player2Name').textContent = '---';
+                document.getElementById('player2Points').textContent = '0 PTS';
+                document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
+                document.getElementById('player3Name').textContent = '---';
+                document.getElementById('player3Points').textContent = '0 PTS';
+                document.getElementById('podium3Avatar').innerHTML = '<span>👤</span>';
+                document.getElementById('rankingsList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏆</div>
+                        <h3>No rankings yet!</h3>
+                        <p>Start logging plants to compete on the leaderboard!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sortedData = [...leaderboardData].sort((a, b) => b.points - a.points);
+            if (sortedData.length >= 1) {
+                document.getElementById('player1Name').textContent = sortedData[0].name || 'Player 1';
+                document.getElementById('player1Points').textContent = sortedData[0].points + ' PTS';
+                const avatar1HTML = sortedData[0].avatar ? `<img src="${sortedData[0].avatar}" alt="Avatar">` : '<span>👤</span>';
+                document.getElementById('podium1Avatar').innerHTML = avatar1HTML;
+            }
+            if (sortedData.length >= 2) {
+                document.getElementById('player2Name').textContent = sortedData[1].name || 'Player 2';
+                document.getElementById('player2Points').textContent = sortedData[1].points + ' PTS';
+                const avatar2HTML = sortedData[1].avatar ? `<img src="${sortedData[1].avatar}" alt="Avatar">` : '<span>👤</span>';
+                document.getElementById('podium2Avatar').innerHTML = avatar2HTML;
+            } else {
+                document.getElementById('player2Name').textContent = '---';
+                document.getElementById('player2Points').textContent = '0 PTS';
+                document.getElementById('podium2Avatar').innerHTML = '<span>👤</span>';
+            }
+            if (sortedData.length >= 3) {
+                document.getElementById('player3Name').textContent = sortedData[2].name || 'Player 3';
+                document.getElementById('player3Points').textContent = sortedData[2].points + ' PTS';
+                const avatar3HTML = sortedData[2].avatar ? `<img src="${sortedData[2].avatar}" alt="Avatar">` : '<span>👤</span>';
+                document.getElementById('podium3Avatar').innerHTML = avatar3HTML;
+            } else {
+                document.getElementById('player3Name').textContent = '---';
+                document.getElementById('player3Points').textContent = '0 PTS';
+                document.getElementById('podium3Avatar').innerHTML = '<span>👤</span>';
+            }
+
+            const rankingsList = document.getElementById('rankingsList');
+            if (sortedData.length <= 3) {
+                rankingsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏆</div>
+                        <h3>No additional rankings yet!</h3>
+                        <p>More players will appear here as they join!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const remainingRanks = sortedData.slice(3, 9);
+            const colors = ['lime', 'orange', 'peach'];
+            rankingsList.innerHTML = remainingRanks.map((player, index) => {
+                const avatarHTML = player.avatar ? `<img src="${player.avatar}" alt="Avatar">` : `<span>👤</span>`;
+                return `
+                    <div class="rank-row ${colors[index % 3]}">
+                        <div class="rank-position">#${index + 4}</div>
+                        <div class="rank-info">
+                            <div class="rank-avatar small">${avatarHTML}</div>
+                            <div class="rank-name">${player.name || 'Player ' + (index + 4)}</div>
+                        </div>
+                        <div class="rank-points">${player.points} PTS</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRewards() {
+            const grid = document.getElementById('rewardsGrid');
+            grid.innerHTML = rewardItems.map(item => `
+                <div class="reward-item">
+                    <div class="reward-image">${item.icon}</div>
+                    <div class="reward-name">${item.name}</div>
+                    <div class="reward-price">${item.price} PTS</div>
+                    <button class="redeem-btn" onclick="redeemItem(${item.id})" ${userPoints < item.price ? 'disabled' : ''}>
+                        ${userPoints < item.price ? 'Not Enough Points' : 'Redeem'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function redeemItem(itemId) {
+            const item = rewardItems.find(i => i.id === itemId);
+            if (!item) return;
+            if (userPoints >= item.price) {
+                userPoints -= item.price;
+                leaderboardData[0].points = userPoints;
+                currentLevel = Math.floor(userPoints / 500) + 1;
+                redemptionHistory.pending.push({
+                    item: item.name,
+                    points: item.price,
+                    date: new Date().toLocaleDateString(),
+                    status: 'pending'
+                });
+                playRedeemSound();
+                addActivity(`Redeemed: ${item.name}`, '🎁');
+                addNotification('🎁 Reward Redeemed', `You redeemed ${item.name} for ${item.price} points!`, 'reward', null, 'reward');
+                updatePointsDisplay();
+                updateLevelDisplay();
+                saveData();
+                renderRewards();
+                renderRedemptionHistory();
+                alert(`🎉 Successfully redeemed ${item.name} for ${item.price} points! Your request is pending approval.`);
+            } else {
+                showInfoPopup('Not Enough Points', `You need ${item.price - userPoints} more points to redeem this item!`);
+            }
+        }
+
+        function switchHistoryTab(tab) {
+            document.querySelectorAll('.history-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.history-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'History').classList.add('active');
+        }
+
+        function renderRedemptionHistory() {
+            const pendingContainer = document.getElementById('pendingHistory');
+            const approvedContainer = document.getElementById('approvedHistory');
+            if (redemptionHistory.pending.length === 0) {
+                pendingContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <h3>No pending redemptions</h3>
+                        <p>Your pending redemptions will appear here</p>
+                    </div>
+                `;
+            } else {
+                pendingContainer.innerHTML = redemptionHistory.pending.map(item => `
+                    <div class="history-item pending">
+                        <div class="history-info">
+                            <div class="history-item-name">${item.item}</div>
+                            <div class="history-item-details">${item.points} points • ${item.date}</div>
+                        </div>
+                        <div class="history-status pending">⏳ Pending</div>
+                    </div>
+                `).join('');
+            }
+
+            if (redemptionHistory.approved.length === 0) {
+                approvedContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h3>No approved redemptions yet</h3>
+                        <p>Your approved redemptions will appear here</p>
+                    </div>
+                `;
+            } else {
+                approvedContainer.innerHTML = redemptionHistory.approved.map(item => `
+                    <div class="history-item approved">
+                        <div class="history-info">
+                            <div class="history-item-name">${item.item}</div>
+                            <div class="history-item-details">${item.points} points • ${item.date}</div>
+                        </div>
+                        <div class="history-status approved">✅ Approved</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateProfilePage() {
+            const displayName = userProfile.name || 'Planter';
+            document.getElementById('profileDisplayName').textContent = displayName;
+            document.getElementById('headerProfileName').textContent = displayName;
+            document.getElementById('bioText').textContent = userProfile.bio;
+            document.getElementById('profilePoints').textContent = userPoints;
+            document.getElementById('profileLevel').textContent = currentLevel;
+            document.getElementById('profilePlants').textContent = plants.length;
+            updateAvatarDisplay();
+            renderProfilePlants();
+            renderActivityLog();
+        }
+
+        function editBio() {
+            document.getElementById('bioDisplay').style.display = 'none';
+            document.getElementById('bioEdit').style.display = 'block';
+            document.getElementById('bioTextarea').value = userProfile.bio;
+        }
+
+        function saveBio() {
+            const newBio = document.getElementById('bioTextarea').value;
+            userProfile.bio = newBio;
+            document.getElementById('bioText').textContent = newBio;
+            document.getElementById('bioDisplay').style.display = 'block';
+            document.getElementById('bioEdit').style.display = 'none';
+            addActivity('Updated bio', '📝');
+            saveData();
+            alert('Bio updated successfully!');
+        }
+
+        function renderProfilePlants() {
+            const container = document.getElementById('profilePlantsGrid');
+            if (plants.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🌱</div>
+                        <h3>No plants logged yet!</h3>
+                        <p>Start logging plants to see them here.</p>
+                    </div>
                 `;
                 return;
             }
@@ -4609,9 +4914,13 @@
                 checkLevelProgress();
             }, 300000);
         };
+        
     </script>
 </body>
 </html>
+
+
+
 
 
 
